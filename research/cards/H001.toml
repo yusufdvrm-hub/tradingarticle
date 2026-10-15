@@ -1,0 +1,27 @@
+id = "H001"
+title = "Liquidation flush reversal"
+author = "claude-opus-5-5"
+created = "2026-10-15"
+builder = "h001_flush_reversal"
+symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "DOGEUSDT", "ADAUSDT", "AVAXUSDT", "LINKUSDT", "LTCUSDT"]
+
+mechanism = """A one-hour drop of at least k sigma on volume at least 3x the 7-day median, while the last settled
+funding is positive (longs were crowded and paying), is mostly forced selling: liquidations and stop cascades.
+Forced sellers are price-insensitive, so price overshoots and partly reverts over the next hours. Mirror case:
+a k-sigma spike on heavy volume with negative funding is a short squeeze; fade it."""
+counterparty = "Liquidated longs (or shorts) whose exchange sells at market regardless of price."
+signal = "Long at the next open after the flush bar; stop 3 x ATR(14); TP 3R; time exit after `hold` bars."
+falsified_if = "OOS net PF incl. funding < 1.2, or the 95% bootstrap lower bound of expectancy R <= 0, or deflated Sharpe < 0.95."
+notes = """Written after rounds 1-2 on the same data (breakout, mean reversion, TSMOM, funding-extreme contrarian,
+XS momentum all failed OOS). The author saw aggregate dev/OOS-period behaviour of those strategies but not of this
+signal. Holdout (2026-07-01 onward) is after the author's knowledge cutoff. Time stop only fires if the trade has
+not reached half the TP distance (broker rule)."""
+
+[fixed]
+stop_atr = 3.0
+tp_r = 3.0
+vol_mult = 3.0
+
+[grid]
+k = [3.0, 4.0]
+hold = [6, 24]

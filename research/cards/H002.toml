@@ -1,0 +1,28 @@
+id = "H002"
+title = "Pre-funding carry exit pressure"
+author = "claude-opus-5-5"
+created = "2026-10-15"
+builder = "h002_prefunding"
+hold_param = "lead"
+symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "DOGEUSDT", "ADAUSDT", "AVAXUSDT", "LINKUSDT", "LTCUSDT"]
+
+mechanism = """When funding is extreme-positive, longs pay a large carry at each settlement. Holders who only want
+price exposure between settlements close before the timestamp to avoid paying, creating predictable selling in the
+hours before settlement. Short `lead` hours before the next settlement, exit just before it (so the strategy pays
+no funding). Mirror: extreme-negative funding, long before settlement."""
+counterparty = "Carry-avoiding position holders who exit on a clock, not on price."
+signal = """Last settled funding rate >= its q-quantile over the last 90 settlements (and > 0) -> short at the open
+`lead` hours before the next settlement (inferred from the last settlement + last interval); exit at the close of the
+bar before settlement (time stop = lead bars); stop 3 x ATR; TP 3R."""
+falsified_if = "OOS net PF incl. funding < 1.2, or the 95% bootstrap lower bound of expectancy R <= 0, or deflated Sharpe < 0.95."
+notes = """Uses the last SETTLED rate, not the live predicted rate (premium index history is not in the dataset), so the
+signal is weaker than a live implementation would be. Round-trip taker costs (~0.14% + slippage) are a high hurdle for
+a 1-2 hour hold; that is part of what is being tested."""
+
+[fixed]
+stop_atr = 3.0
+tp_r = 3.0
+
+[grid]
+q = [0.8, 0.9]
+lead = [1, 2]
