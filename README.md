@@ -92,3 +92,7 @@ Canlı emir modülü (borsada reduce-only stop, mutabakat) bir sonraki fazdır.
 - Lot/tick adımlarına yuvarlama yok (6 anlamlı basamak); canlı modda `exchangeInfo` ile yapılacak.
 - Claude orkestratörü (rejim incelemesi, günlük rapor) henüz bağlı değil; şimdilik `opusjev report` çıktısını Claude'a verip yorumlatabilirsiniz.
 - Sentetik backtest sonuçları anlamsızdır; strateji kenarı yalnızca gerçek veride ölçülür.
+
+## Lisans
+
+[Unlicense](LICENSE): kamu malı. Kod ve metinler herhangi bir amaçla, izin ya da atıf gerekmeden kullanılabilir.
